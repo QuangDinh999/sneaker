@@ -1,16 +1,30 @@
 <?php
     function read(){
+        include_once "connect/open.php";
         $search = '';
         if(isset($_POST['search'])){
             $search = $_POST['search'];
         }
-        include_once "connect/open.php";
-        $sql = "SELECT * FROM user WHERE user.user_name LIKE '%$search%'";
+        $page = 1;
+        if(isset($_POST['page'])){
+            $page = $_POST['page'];
+        }
+        $recordOnePage = 3;
+        $sqlRecord = "SELECT COUNT(*) AS count_record FROM user WHERE user.user_name LIKE '%$search%'";
+        $record = mysqli_query($connect, $sqlRecord);
+        foreach ($record as $each){
+            $Record = $each['count_record'];
+        }
+        $Countpage = ceil($Record / $recordOnePage);
+        $start = ($page - 1) * $recordOnePage;
+        $end = $page * $recordOnePage;
+        $sql = "SELECT * FROM user WHERE user.user_name LIKE '%$search%' LIMIT $start, $end";
         $user = mysqli_query($connect, $sql);
         include_once "connect/close.php";
         $array = array();
         $array['user'] = $user;
         $array['search'] = $search;
+        $array['page'] = $Countpage;
         return $array;
     }
     function store(){
@@ -28,6 +42,16 @@
         include_once "connect/open.php";
         $sql = "SELECT * FROM user WHERE user_id = '$user_id'";
         $user = mysqli_query($connect, $sql);
+        include_once "connect/close.php";
+        return $user;
+    }
+    function update() {
+        $user_name = $_POST['user_name'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        include_once "connect/open.php";
+            $sql = "UPDATE user SET user_name = '$user_name', email = '$email'";
+            $user = mysqli_query($connect, $sql);
         include_once "connect/close.php";
         return $user;
     }
@@ -56,7 +80,10 @@
         include_once "connect/close.php";
     }
     function logout() {
-        session_destroy();
+        unset($_SESSION['user_id']);
+        unset($_SESSION['user_name']);
+        unset($_SESSION['cart']);
+        $_SESSION['cart'] = array();
     }
     switch ($action){
         case '':

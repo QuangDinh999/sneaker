@@ -13,10 +13,15 @@
             break;
         case 'store':
             include_once "model/UserModel.php";
+            header('Location:index.php?controller=user');
             break;
         case 'edit':
             include_once "model/UserModel.php";
             include_once "views/admin_site/edit_user.php";
+            break;
+        case 'update':
+            include_once "model/UserModel.php";
+            header('Location:index.php?controller=user');
             break;
         case 'destroy':
             include_once "model/UserModel.php";

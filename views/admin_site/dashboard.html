@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/datepicker3.css" rel="stylesheet">
+    <link href="css/bootstrap-table.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+    <!--Icons-->
+
+
+
+
+    <script src="js/lumino.glyphs.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-light navbar-fixed-top" style="background-color: rgb(33, 84, 84);" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header ">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <span style="color: white; font-family:'Times New Roman', Times, serif; padding-left: 20px; font-size: x-large">ADMIN</span>
+
+            </a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa-solid fa-circle-user"></i>           Log In<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> File</a></li>
+                        <li><a href="#"><svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Log Out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</nav>
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar" style="background-color: rgb(213, 206, 207)">
+    <form role="search">
+        <div class="form-group">
+            <p style="color: rgb(33, 84, 84)"><i class="fa-solid fa-magnifying-glass"></i>Search</p>
+            <input type="text" style="border-radius: 30px;" class="form-control" placeholder="Search">
+        </div>
+    </form>
+    <ul class="nav menu">
+        <li>
+            <a href="dashboard.html" style="color: rgb(33, 84, 84); text-align: left;"><i class="fa-solid fa-gauge"></i>Dashboard</a>
+        </li>
+        <li>
+            <a href="index.php?controller=user" style="color: rgb(33, 84, 84);text-align: left;"><i class="fa-solid fa-users"></i>  User management</a>
+        </li>
+        <li>
+            <a href="index.php?controller=category" style="color:rgb(33, 84, 84);text-align: left; "><i class="fa-regular fa-folder-open"></i>Categories management</a>
+        </li>
+        <li class="active">
+            <a href="index.php?controller=product" style="color: rgb(33, 84, 84);text-align: left;"><i class="fa-solid fa-cart-shopping"></i> Product management</a>
+        </li>
+        <li>
+            <a href="index.php?controller=brand" style="color: rgb(33, 84, 84);text-align: left;"><i class="fa-solid fa-copyright"></i> Brand management</a>
+        </li>
+        <li>
+            <a href="index.php?controller=invoice" style="color: rgb(33, 84, 84);text-align: left;"><i class="fa-solid fa-file-invoice-dollar"></i> Invoice management</a>
+        </li>
+        <li>
+            <a href="index.php?controller=payment" style="color: rgb(33, 84, 84);text-align: left;"><i class="fa-regular fa-credit-card"></i> Payment management</a>
+        </li>
+    </ul>
+</div>
+</div><!--/.sidebar-->
+
+
+
+    <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+        <div class="row">
+            <ol class="breadcrumb">
+                <li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+                <li class="active">Admin Page</li>
+            </ol>
+        </div>
+
+        <div class="row" style="background-color: rgb(48, 120, 120)">
+            <div class="col-lg-12" style="text-align: center;">
+                <h1 class="page-header" style="color: white">Admin Page</h1>
+            </div>
+        </div>
+        <div class="row admin text-center">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div class="admin-content analysis-progrebar-ctn">
+                            <h4 class="text-left text-uppercase"><b>Product</b></h4>
+                            <div class="row vertical-center-box vertical-center-box-tablet">
+                                <div class="col-xs-3 mar-bot-15 text-left" >
+                                    <i class="fa-solid fa-cart-shopping" style="color: rgb(66, 51, 136); font-size:xx-large;"></i>
+                                </div>
+                                <div class="col-xs-9 cus-gh-hd-pro">
+                                    <h2 class="text-right no-margin">10,000</h2>
+                                </div>
+                            </div>
+                            <div class="progress progress-mini">
+                                <div style="width: 78%;" class="progress-bar progress-bar-striped"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-bottom:1px;">
+                        <div class="admin-content analysis-progrebar-ctn res-mg-t-30">
+                            <h4 class="text-left text-uppercase"><b>Advertisement</b></h4>
+                            <div class="row vertical-center-box vertical-center-box-tablet">
+                                <div class="text-left col-xs-3 mar-bot-15">
+                                    <i class="fa-solid fa-rectangle-ad" style="color: rgb(189, 62, 42); font-size:xx-large;"></i>
+                                </div>
+                                <div class="col-xs-9 cus-gh-hd-pro">
+                                    <h2 class="text-right no-margin">5,000</h2>
+                                </div>
+                            </div>
+                            <div class="progress progress-mini">
+                                <div style="width: 38%;" class="progress-bar progress-bar-striped bg-danger"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div class="admin-content analysis-progrebar-ctn res-mg-t-30">
+                            <h4 class="text-left text-uppercase"><b>Comment</b></h4>
+                            <div class="row vertical-center-box vertical-center-box-tablet">
+                                <div class="text-left col-xs-3 mar-bot-15">
+                                    <i class="fa-solid fa-comment" style="color: rgb(54, 165, 26); font-size:xx-large;"></i>
+                                </div>
+                                <div class="col-xs-9 cus-gh-hd-pro">
+                                    <h2 class="text-right no-margin">2k</h2>
+                                </div>
+                            </div>
+                            <div class="progress progress-mini">
+                                <div style="width: 60%;" class="progress-bar progress-bar-striped bg-success"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div class="admin-content analysis-progrebar-ctn res-mg-t-30">
+                            <h4 class="text-left text-uppercase"><b>Users</b></h4>
+                            <div class="row vertical-center-box vertical-center-box-tablet">
+                                <div class="text-left col-xs-3 mar-bot-15">
+                                    <i class="fa-solid fa-users" style="color: rgb(129, 26, 106); font-size:xx-large;"></i>
+                                </div>
+                                <div class="col-xs-9 cus-gh-hd-pro">
+                                    <h2 class="text-right no-margin">40</h2>
+                                </div>
+                            </div>
+                            <div class="progress progress-mini">
+                                <div style="width: 30%;" class="progress-bar progress-bar-striped bg-info"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</body>
+</html>

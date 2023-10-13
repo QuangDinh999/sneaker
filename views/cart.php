@@ -22,9 +22,58 @@
 </head>
 
 <body>
-    <?php
-    include "header/header.php";
-    ?>
+    <!-- Navbar Start -->
+    <div class="container-fluid bg-dark mb-30">
+        <div class="row px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block pt-3 pb-3">
+                <a href="index.php?controller=home" class="text-decoration-none">
+                    <span class="h1 text-uppercase text-primary bg-dark px-2">REAL</span>
+                    <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">SNEAKER</span>
+                </a>
+            </div>
+            <div class="col-lg-9">
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                        <div class="navbar-nav ml-auto py-0 d-none d-lg-block pt-3">
+                            <a href="index.php?controller=home&action=cart" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-primary" style="font-size: x-large"></i>
+                                <!--                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;"><></span>-->
+                            </a>
+                            <a href="index.php?controller=home&action=cart_history" class="btn px-0 ml-3">
+                                <i class="fas fa-history text-primary" style="font-size: x-large"></i>
+                            </a>
+                            <a href="index.php?controller=user&action=login" class="btn px-0 ml-3">
+                                <i class="fas fa-regular fa-user text-primary" style="font-size: x-large"></i>
+                            </a>
+                            <a href="index.php?controller=user&action=logout" class="btn px-0 ml-3">
+                                <i class="fas fa-sign-out-alt text-primary" style="font-size: x-large"></i>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Topbar Start -->
+    <div class="container-fluid">
+        <div class="row align-items-center bg-light py-3 px-xl-5  d-none d-lg-flex">
+            <div class="col-lg-4 col-6 text-left" style="margin-left: 500px">
+                <div class="input-group">
+                    <form method="post" action="index.php?controller=home&action=search" style="width: 1000px">
+                        <div class="input-group-append">
+                            <input type="text" class="form-control" name="search"  placeholder="Tìm kiếm sản phẩm">
+                            <button>
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
 
 
     <!-- Breadcrumb Start -->
@@ -69,7 +118,7 @@
                                 <td class="align-middle">
                                     <div class="input-group quantity mx-auto" style="width: 100px;">
 
-                                        <input type="number" name="quantity[<?=$shoes_id?>]" class="form-control form-control-sm bg-secondary border-0 text-center" value="<?=$value['quantity']?>">
+                                        <input type="number" min="1" max="10" name="quantity[<?=$shoes_id?>]" class="form-control form-control-sm bg-secondary border-0 text-center" value="<?=$value['quantity']?>">
 
                                     </div>
                                 </td>
@@ -83,7 +132,6 @@
                         <button class="btn btn-block btn-primary font-weight-bold " style="margin-bottom: 10px; width: 200px; height: 40px; display: inline-block">Cập nhật giỏ hàng</button>
                         <a href="index.php?controller=home&action=delete_cart" class="btn btn-danger font-weight-bold" style="margin-bottom: 10px; margin-left: 20px; width: 200px; height: 40px;">Xóa Giỏ Hàng</a>
                     </table>
-
                 </form>
 
             </div>
@@ -104,22 +152,31 @@
                                     </select>
                                 </div>
                             <h6>Thanh Toán</h6><br>
-
                             <?php
                             foreach ($cart['shoes'] as $shoes_id => $value){
-                            ?>
+                                ?>
                             <div class="d-flex justify-content-between mb-3" style="padding-left: 260px">
-                                <h6><?=number_format($value['total'],0,',','.')?> VND</h6>
+                                <h6><?=number_format($value['total'],0,',','.');?> VND</h6>
                             </div>
-                                <?php
-                            }
-                            ?>
+                            <?php }?>
                         </div>
-
                             <div class="pt-2">
+
                                 <div class="d-flex justify-content-between mt-2">
                                     <h5>Tổng thanh toán</h5>
-                                    <h5>134></h5>
+                                        <h5>
+                                         <?php
+                                        if(empty($cart['shoes'])){
+                                            echo 0;
+                                        }else{
+                                            $latest_value = end($cart['shoes']);
+                                            $latest_totalprice = $latest_value['totalprice'];
+                                            echo number_format($latest_totalprice,0,',','.');
+
+                                        }
+                                        ?>VND
+                                        </h5>
+
                                 </div>
                             </div>
                         <button class="btn btn-block btn-primary font-weight-bold my-3 py-3" >Tiếp tục thanh toán</button>
@@ -129,9 +186,7 @@
         </div>
     </div>
     <!-- Cart End -->
-
-
     <?php include "footer/footer.php";?>
-</body>
 
+</body>
 </html>

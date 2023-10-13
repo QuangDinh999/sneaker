@@ -1,9 +1,9 @@
 <?php
     function read() {
         include_once "connect/open.php";
-        $sqlNew = "SELECT * FROM shoes WHERE shoes.shoes_category = 0";
+        $sqlNew = "SELECT * FROM shoes WHERE shoes.shoes_category = 0 GROUP BY shoes_name";
         $new = mysqli_query($connect, $sqlNew);
-        $sqlFeature = "SELECT * FROM shoes WHERE shoes.shoes_category = 1";
+        $sqlFeature = "SELECT * FROM shoes WHERE shoes.shoes_category = 1 GROUP BY shoes_name";
         $feature = mysqli_query($connect, $sqlFeature);
         $sqlBrand = "SELECT * FROM brand";
         $brand = mysqli_query($connect, $sqlBrand);
@@ -19,8 +19,13 @@
         include_once "connect/open.php";
         $sql = "SELECT * FROM shoes WHERE shoes_id = '$shoes_id'";
         $shoes = mysqli_query($connect, $sql);
+        $sqlBrand = "SELECT * FROM brand";
+        $brand = mysqli_query($connect, $sqlBrand);
         include_once "connect/close.php";
-        return $shoes;
+        $array = array();
+        $array['shoes'] = $shoes;
+        $array['brand'] = $brand;
+        return $array;
     }
 
     function shoplist(){
@@ -41,12 +46,26 @@
     }
 
     function search() {
+        include_once "connect/open.php";
         $search = '';
         if(isset($_POST['search'])){
             $search = $_POST['search'];
         }
-        include_once "connect/open.php";
-        $sqlShoes = "SELECT * FROM shoes WHERE shoes.shoes_name LIKE '%$search%'";
+        $page = 1;
+        if(isset($_POST['page'])){
+            $page = $_POST['page'];
+        }
+        $recordOnePage = 8;
+        $sqlRecord = "SELECT COUNT(*) AS count_record FROM shoes WHERE shoes.shoes_name LIKE '%$search%'";
+        $record = mysqli_query($connect, $sqlRecord);
+        foreach ($record as $each){
+            $Record = $each['count_record'];
+        }
+
+        $Countpage = ceil($Record / $recordOnePage);
+        $start = ($page - 1) *  $recordOnePage;
+        $end = $page * $recordOnePage;
+        $sqlShoes = "SELECT * FROM shoes WHERE shoes.shoes_name LIKE '%$search%' LIMIT $start, $end";
         $shoes = mysqli_query($connect, $sqlShoes);
         $sqlBrand = "SELECT * FROM brand";
         $brand = mysqli_query($connect, $sqlBrand);
@@ -55,7 +74,9 @@
         $array['shoes'] = $shoes;
         $array['brand'] = $brand;
         $array['search'] = $search;
+        $array['page'] = $Countpage;
         return $array;
+
     }
     function category(){
         $id = $_GET['category_id'];
@@ -84,12 +105,29 @@
             $_SESSION['cart'][$shoes_id] = 1;
         }
     }
+    function add_cart_detail() {
+        $quantity_cart = $_POST['quantity_cart'];
+        $shoes_id = $_GET['id'];
+        if(isset($_SESSION['cart'])){
+            if(isset($_SESSION['cart'][$shoes_id])){
+                $_SESSION['cart'][$shoes_id]++;
+            }else{
+                $_SESSION['cart'][$shoes_id] = $quantity_cart;
+            }
+        }else{
+            $_SESSION['cart'] = array();
+            $_SESSION['cart'][$shoes_id] = $quantity_cart;
+        }
+    }
     function cart(){
         $cart = array();
         $temp = array();
         include_once "connect/open.php";
         $sqlPayment = "SELECT * FROM payment_method";
         $payment = mysqli_query($connect, $sqlPayment);
+        $sqlBrand = "SELECT * FROM brand";
+        $brand = mysqli_query($connect, $sqlBrand);
+        $totalprice = 0;
         foreach ($_SESSION['cart'] as $shoes_id => $quantity){
             $sql = "SELECT shoes_name, price, image FROM shoes WHERE shoes_id = '$shoes_id'";
             $shoes = mysqli_query($connect, $sql);
@@ -99,6 +137,7 @@
                 $temp[$shoes_id]['image'] = $sho['image'];
                 $temp[$shoes_id]['quantity'] = $quantity;
                 $temp[$shoes_id]['total'] = $sho['price']*$quantity;
+                $temp[$shoes_id]['totalprice'] = $totalprice += $temp[$shoes_id]['total'];
             }
         }
         include_once "connect/close.php";
@@ -106,10 +145,41 @@
         $cart['payment'] = $payment;
         return $cart;
     }
+
+    function cart_history() {
+        $user_id = $_SESSION['user_id'];
+        include_once "connect/open.php";
+        $sqlInvoice = "SELECT * FROM detail_invoice
+                       INNER JOIN shoes ON detail_invoice.shoes_id = shoes.shoes_id
+                       INNER JOIN invoice ON detail_invoice.invoice_id = invoice.invoice_id WHERE user_id = '$user_id'ORDER BY invoice.invoice_id DESC";
+        $invoices = mysqli_query($connect, $sqlInvoice);
+        $sqlBrand = "SELECT * FROM brand";
+        $brand = mysqli_query($connect, $sqlBrand);
+        include_once "connect/close.php";
+        $array = array();
+        $array['invoices'] = $invoices;
+        $array['brand'] = $brand;
+        return $array;
+
+    }
+    function delete_invoice() {
+        $shoes_id = $_GET['id'];
+        $invoice_status = $_GET['status'];
+        if($invoice_status == 0){
+            include_once "connect/open.php";
+            $sqlDetail = "UPDATE detail_invoice SET status_detail = 1 WHERE shoes_id = '$shoes_id'";
+            $detail = mysqli_query($connect, $sqlDetail);
+            include_once "connect/close.php";
+            return 0;
+        }else{
+            return 1;
+
+        }
+    }
     function update_cart() {
         $items = $_POST['quantity'];
         foreach ($items as $shoes_id => $quantity){
-            if($quantity < 0){
+            if($quantity <= 0){
                 echo "<script> alert('cap nhat khong thanh cong');</script>";
             }else{
                 $_SESSION['cart'][$shoes_id] = $quantity;
@@ -147,7 +217,8 @@
             foreach ($Shoesprice as $value){
                 $price = $value['price'];
             }
-            $sqlDetailInvoice = "INSERT INTO detail_invoice VALUES ('$product_id', '$invoice_id', '$quantity', '$price')";
+            $status_detail = 0;
+            $sqlDetailInvoice = "INSERT INTO detail_invoice VALUES ('$product_id', '$invoice_id', '$quantity', '$price', '$status_detail')";
             mysqli_query($connect, $sqlDetailInvoice);
         }
         include_once "connect/close.php";
@@ -168,13 +239,16 @@
             $array = search();
             break;
         case 'detail':
-            $shoes = detail();
+            $array = detail();
             break;
         case 'category':
             $array = category();
             break;
         case 'add_cart':
             add_cart();
+            break;
+        case 'add_cart_detail':
+            add_cart_detail();
             break;
         case 'cart':
             $cart = cart();
@@ -190,6 +264,12 @@
             break;
         case 'add_order':
             add_order();
+            break;
+        case 'cart_history':
+            $array = cart_history();
+            break;
+        case 'delete_invoice':
+            $test = delete_invoice();
             break;
     }
 ?>

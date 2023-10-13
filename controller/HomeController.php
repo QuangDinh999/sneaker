@@ -29,9 +29,17 @@
             include_once "model/HomeModel.php";
             header('Location:index.php?controller=home&action=cart');
             break;
-        case 'cart':
+        case 'add_cart_detail':
             include_once "model/HomeModel.php";
-            include "views/cart.php";
+            header('Location:index.php?controller=home&action=cart');
+            break;
+        case 'cart':
+            if(isset($_SESSION['user_id'])){
+                include_once "model/HomeModel.php";
+                include "views/cart.php";
+            }else{
+                header('Location:index.php?controller=user&action=login');
+            }
             break;
         case 'update_cart':
             include_once "model/HomeModel.php";
@@ -51,6 +59,18 @@
             break;
         case 'success':
             include "views/success.php";
+            break;
+        case 'cart_history':
+            include "model/HomeModel.php";
+            include "views/cart_history.php";
+            break;
+        case 'delete_invoice':
+            include "model/HomeModel.php";
+            if($test == 0){
+                header('Location:index.php?controller=home&action=cart_history');
+            }else{
+                header('Location:index.php?controller=home&action=cart_history');
+            }
             break;
     }
 ?>
